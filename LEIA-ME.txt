@@ -1,1 +1,1 @@
-SET Stage v8: correção responsiva para celular e tablet. Substitua o index.html no GitHub; a Vercel redeploya automaticamente.
+v9: correção de compatibilidade com Safari/iPadOS. Mantém layout responsivo da v8.
