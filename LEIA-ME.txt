@@ -1,0 +1,11 @@
+SET • Stage v7
+
+NOVO NO MODO PALCO
+- A cifra é distribuída automaticamente em colunas verticais.
+- A ideia é mostrar o máximo possível da música na mesma tela e reduzir a necessidade de rolagem com a mão.
+- ‹ e › navegam entre grupos de colunas quando a música for longa.
+- ↑ / ↓ e PageUp / PageDown também mudam entre colunas.
+- ← / → continuam mudando de música.
+- Em telas menores, a largura das colunas se adapta automaticamente.
+
+Todo o restante da v6 foi mantido.
