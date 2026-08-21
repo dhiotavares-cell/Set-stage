@@ -72,6 +72,42 @@ input{width:100%;background:#0d1014;color:var(--text);border:1px solid var(--lin
 .stage .stage-arrow{pointer-events:auto;width:58px;height:58px;border-radius:50%;border:1px solid var(--line);background:rgba(20,24,29,.92);color:var(--text);font-size:28px;cursor:pointer}
 .stage .stage-arrow:disabled{opacity:.25;cursor:default}
 @media(max-width:820px){.app{grid-template-columns:1fr}aside{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:18px}.grid{grid-template-columns:1fr}.top{flex-direction:column}textarea{min-height:430px}}
+
+/* v8 mobile/tablet */
+@media(max-width:1100px){
+ body{overflow:auto}
+ .app{display:block;min-height:100vh}
+ aside{position:sticky;top:0;z-index:40;width:100%!important;height:auto!important;border-right:0;border-bottom:1px solid var(--line);padding:10px 12px!important;background:#0d1014}
+ #setlist{display:flex!important;gap:8px;overflow-x:auto;padding:3px 0 8px;-webkit-overflow-scrolling:touch}
+ #setlist .section{display:contents}
+ #setlist .section h3{display:none}
+ #setlist .song{flex:0 0 auto;width:auto!important;min-width:150px;max-width:230px;padding:10px 12px}
+ main{width:100%!important;padding:14px!important;overflow:visible!important}
+ .topbar{flex-direction:column!important;align-items:stretch!important;gap:10px}
+ .actions{display:flex!important;gap:7px;overflow-x:auto;flex-wrap:nowrap!important;padding-bottom:4px}
+ .actions .btn{flex:0 0 auto}
+ .responsive-grid{grid-template-columns:1fr!important}
+ .map{flex-wrap:wrap;overflow:visible}
+ .chart-view{min-height:55vh;font-size:17px;overflow-x:auto}
+}
+@media(max-width:600px){
+ main{padding:10px!important}
+ #setlist .song{min-width:135px;max-width:180px;font-size:13px}
+ .topbar h1{font-size:25px!important}
+ .btn{padding:9px 10px;font-size:13px}
+ .card{padding:12px!important}
+ .chart-view{font-size:16px;line-height:1.6;padding:12px;min-height:60vh}
+}
+.stage aside{display:none!important}
+.stage main{width:100%!important;padding:10px 14px!important}
+@media(max-width:1100px){
+ .stage .chart-view{height:calc(100vh - 150px)!important;column-width:calc(50vw - 35px)!important;column-gap:28px!important;font-size:18px!important}
+}
+@media(max-width:700px){
+ .stage .chart-view{height:calc(100vh - 145px)!important;column-width:calc(100vw - 34px)!important;column-gap:24px!important;font-size:17px!important}
+ .stage .stage-arrow{width:48px;height:48px;font-size:23px}
+}
+
 </style>
 </head>
 <body>
