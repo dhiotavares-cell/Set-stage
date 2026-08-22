@@ -1,1 +1,22 @@
-v9: correção de compatibilidade com Safari/iPadOS. Mantém layout responsivo da v8.
+SET • Stage v10 — Cloud Sync + redesign
+
+Principais mudanças:
+- redesign visual completo, mantendo o repertório real da v9;
+- busca de músicas;
+- login por e-mail/senha via Supabase Auth;
+- sincronização em nuvem da lista de músicas, cifra, tom, capo, BPM, compasso, mapa e combinados;
+- Realtime: alterações salvas em outro dispositivo podem ser recebidas sem recarregar;
+- cache local continua funcionando como fallback;
+- correção do cálculo de capotraste: a forma-base usa sourceCapo fixo, não o capo atual;
+- modo palco em colunas com navegação horizontal corrigida/clampada no fim;
+- layout responsivo para desktop, iPad/tablet e celular;
+- painel de acordes e diagramas;
+- busca e status visual de sincronização.
+
+Primeiro uso:
+1. publique este index.html no GitHub;
+2. aguarde o deploy da Vercel;
+3. abra o site e clique em Entrar;
+4. use Criar conta com e-mail/senha;
+5. se o Supabase exigir confirmação de e-mail, confirme pelo link recebido;
+6. entre no computador e no iPad com a mesma conta.
