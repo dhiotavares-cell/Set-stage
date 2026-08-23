@@ -1,22 +1,25 @@
-SET • Stage v10 — Cloud Sync + redesign
+SET • Stage v11
 
-Principais mudanças:
-- redesign visual completo, mantendo o repertório real da v9;
-- busca de músicas;
-- login por e-mail/senha via Supabase Auth;
-- sincronização em nuvem da lista de músicas, cifra, tom, capo, BPM, compasso, mapa e combinados;
-- Realtime: alterações salvas em outro dispositivo podem ser recebidas sem recarregar;
-- cache local continua funcionando como fallback;
-- correção do cálculo de capotraste: a forma-base usa sourceCapo fixo, não o capo atual;
-- modo palco em colunas com navegação horizontal corrigida/clampada no fim;
-- layout responsivo para desktop, iPad/tablet e celular;
-- painel de acordes e diagramas;
-- busca e status visual de sincronização.
+NOVO
+- Repertório permanente em public.songs.
+- Criação, edição e arquivamento de músicas pela interface.
+- Várias setlists em public.setlists.
+- Músicas das setlists continuam no repertório; public.setlist_songs só cria vínculos.
+- Ordem das músicas por setlist, com subir/descer/remover.
+- Tom, capo e combinados podem ter override específico por setlist.
+- Modo Instrumental e Modo Vocal.
+- Mapa vocal por seção: uníssono, líder, V1+V2, 3 vozes, homens, mulheres, backs etc.
+- Modo Palco usa a MESMA cifra/guia vocal renderizado na tela normal.
+- Correção estrutural do bug "editei a cifra, mas o palco mostra a antiga".
+- Migração automática: se a conta ainda não tiver músicas na tabela songs, a v11 importa o repertório inicial e cria uma setlist "Set atual".
 
-Primeiro uso:
-1. publique este index.html no GitHub;
-2. aguarde o deploy da Vercel;
-3. abra o site e clique em Entrar;
-4. use Criar conta com e-mail/senha;
-5. se o Supabase exigir confirmação de e-mail, confirme pelo link recebido;
-6. entre no computador e no iPad com a mesma conta.
+PUBLICAÇÃO
+1. Extraia o ZIP.
+2. No GitHub, substitua index.html pelo novo index.html.
+3. Commit sugerido: "Atualiza SET Stage para v11 repertório e vocal".
+4. Aguarde a Vercel publicar.
+5. Abra o mesmo domínio.
+6. Entre com a conta que já funciona.
+
+OBSERVAÇÃO
+A edição da cifra-base é feita no Repertório. Dentro de uma setlist, tom/capo/notas podem ser específicos daquele evento sem alterar a música-base.
