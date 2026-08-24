@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b10">
-<title>SET • Stage v12-A.2</title>
+<title>SET • Stage v12-A.3</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -64,7 +64,7 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.04;margin:0 0 6px;letter-spacing
 <body>
 <div class="app">
  <aside class="sidebar">
-  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco • v12-A.2</div></div></div>
+  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco • v12-A.3</div></div></div>
   <div class="tabs"><button class="tab active" id="libraryTab">Repertório</button><button class="tab" id="setlistTab">Setlists</button></div>
   <div id="libraryControls">
    <div class="side-actions"><button class="btn primary small" id="newSongBtn">+ Música</button></div>
@@ -715,7 +715,10 @@ function renderChords(){
 function renderVocalGrid(){
  const s=currentSong();if(!s)return;const sections=sectionsFromSong(s),existing=vocalMapObj(s);
  $("vocalGrid").innerHTML=sections.map(sec=>{const v=existing.find(x=>(x.section||"").toLowerCase()===sec.toLowerCase())||{};return `<div class="vocal-row" data-section="${escapeHtml(sec)}"><input value="${escapeHtml(sec)}" disabled><select><option value="">Sem indicação</option>${["Uníssono","Líder / solo","Todos","V1 + V2","3 vozes","Homens","Mulheres","Backs respondem","Livre / espontâneo"].map(o=>`<option ${v.assignment===o?"selected":""}>${o}</option>`).join("")}</select><input class="vnote" placeholder="Ex.: abre terça acima" value="${escapeHtml(v.note||"")}"></div>`}).join("")||'<div class="notice">Adicione seções ao mapa da música.</div>';
- $("vocalGrid").querySelectorAll(".vocal-row").forEach(row=>{row.querySelector("select").addEventListener("change",saveVocalGridDebounced);row.querySelector(".vnote").addEventListener("input",saveVocalGridDebounced)})
+ $("vocalGrid").querySelectorAll(".vocal-row").forEach(row=>{
+ row.querySelector("select").addEventListener("change",()=>{const data=currentVocalGridData();const s=currentSong();if(!s)return;if(sideMode==="setlist"){const item=activeSetlistItem();if(item)item.vocal_map_override=data;persistVocalData(data)}else saveVocalGridDebounced()});
+ row.querySelector(".vnote").addEventListener("input",saveVocalGridDebounced)
+})
 }
 function renderMapEditor(){
  const s=currentSong();if(!s)return;const meta=normalizeMap(s.song_map);$("mapEditor").innerHTML=meta.sections.map((sec,i)=>`<div class="vocal-row" data-mi="${i}" style="margin-top:7px"><input value="${escapeHtml(sec)}"><button class="btn small" data-mup="${i}">↑</button><div><button class="btn small" data-mdown="${i}">↓</button> <button class="btn danger small" data-mdel="${i}">×</button></div></div>`).join("")+`<button class="btn small" id="mapAdd" style="margin-top:8px">+ seção</button>`;
@@ -835,11 +838,14 @@ async function persistVocalData(data){
 }
 function saveVocalGridDebounced(){
  const data=currentVocalGridData();
- const s=currentSong();
- if(s){
-  if(sideMode==="setlist"){const item=activeSetlistItem();if(item)item.vocal_map_override=data}
-  else s.vocal_map=data;
+ const s=currentSong();if(!s)return;
+ if(sideMode==="setlist"){
+  const item=activeSetlistItem();if(!item)return;
+  item.vocal_map_override=data;
+  persistVocalData(data);
+  return;
  }
+ s.vocal_map=data;
  clearTimeout(saveTimer);
  saveTimer=setTimeout(()=>persistVocalData(data),350)
 }
