@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b10">
-<title>SET • Stage v11</title>
+<title>SET • Stage v12-A</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -64,7 +64,7 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.04;margin:0 0 6px;letter-spacing
 <body>
 <div class="app">
  <aside class="sidebar">
-  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco</div></div></div>
+  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco • v12-A</div></div></div>
   <div class="tabs"><button class="tab active" id="libraryTab">Repertório</button><button class="tab" id="setlistTab">Setlists</button></div>
   <div id="libraryControls">
    <div class="side-actions"><button class="btn primary small" id="newSongBtn">+ Música</button></div>
@@ -651,7 +651,10 @@ function stripChordLines(chart){
  const chordRx=/^\s*(?:[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|M)?\d*(?:\([^)]+\))?(?:\/[A-G](?:#|b)?)?\s*)+$/;
  return lines.filter(line=>/^\[[^\]]+\]\s*$/.test(line.trim())||!chordRx.test(line.trim())).join("\n").replace(/\n{3,}/g,"\n\n").trim();
 }
-function vocalMapObj(song){return Array.isArray(song.vocal_map)?song.vocal_map:[]}
+function vocalMapObj(song){
+ const item=sideMode==="setlist"?activeSetlistItem():null;
+ return Array.isArray(item?.vocal_map_override)?item.vocal_map_override:(Array.isArray(song.vocal_map)?song.vocal_map:[]);
+}
 function renderVocalText(song){
  const lyrics=(song.lyrics||stripChordLines(song.chart||"")).trim();
  const cues=vocalMapObj(song);
@@ -812,7 +815,20 @@ async function moveSetlistItem(id,d){const arr=setlistItems.slice().sort((a,b)=>
 async function normalizePositions(){setlistItems.sort((a,b)=>(a.position||0)-(b.position||0));for(let i=0;i<setlistItems.length;i++)setlistItems[i].position=i+1;await Promise.all(setlistItems.map(x=>db.from("setlist_songs").update({position:x.position}).eq("id",x.id)))}
 async function deleteSetlist(){if(!currentSetlistId||!confirm("Excluir esta setlist? As músicas continuarão no repertório."))return;await db.from("setlist_songs").delete().eq("setlist_id",currentSetlistId);const r=await db.from("setlists").delete().eq("id",currentSetlistId);if(r.error){alert(r.error.message);return}setlists=setlists.filter(s=>s.id!==currentSetlistId);currentSetlistId=setlists[0]?.id||null;await loadSetlistItems();currentSongId=setlistItems[0]?.song_id||songs[0]?.id||null;render()}
 
-function saveVocalGridDebounced(){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{const s=currentSong();if(!s)return;s.vocal_map=[...$("vocalGrid").querySelectorAll(".vocal-row")].map(row=>({section:row.dataset.section,assignment:row.querySelector("select").value,note:row.querySelector(".vnote").value})).filter(x=>x.assignment||x.note);await saveSongNow()},600)}
+function saveVocalGridDebounced(){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{
+ const s=currentSong();if(!s)return;
+ const data=[...$("vocalGrid").querySelectorAll(".vocal-row")].map(row=>({section:row.dataset.section,assignment:row.querySelector("select").value,note:row.querySelector(".vnote").value})).filter(x=>x.assignment||x.note);
+ if(sideMode==="setlist"){
+  const item=activeSetlistItem();if(!item)return;
+  item.vocal_map_override=data;
+  const r=await db.from("setlist_songs").update({vocal_map_override:data,updated_at:new Date().toISOString()}).eq("id",item.id);
+  if(r.error){setSync("err","Erro",r.error.message);return}
+  setSync("ok","Sincronizado");
+ }else{
+  s.vocal_map=data;
+  await saveSongNow();
+ }
+},600)}
 
 $("libraryTab").onclick=()=>{sideMode="library";editOpen=false;if(!currentSongId)currentSongId=songs[0]?.id||null;render()};
 $("setlistTab").onclick=async()=>{sideMode="setlist";editOpen=false;if(!currentSetlistId&&setlists.length)currentSetlistId=setlists[0].id;await loadSetlistItems();currentSongId=setlistItems[0]?.song_id||null;render()};
