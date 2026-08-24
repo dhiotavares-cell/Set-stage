@@ -1,0 +1,20 @@
+SET • Stage v12-A.2 — correção do Atualizar seções
+
+Base: v12-A (checkpoint em que o vocal já fica isolado por setlist).
+
+Correção:
+- A mudança no vocal é copiada imediatamente para o estado local.
+- O autosave persiste esse estado no vocal_map_override.
+- “Atualizar seções” captura o que está atualmente nos controles,
+  salva o override e somente depois reconstrói o mapa vocal.
+- Não depende do botão Salvar geral.
+
+Não adiciona cifra/mapa/PDF nem altera login.
+
+Teste:
+1. Em uma setlist, mude uma divisão vocal.
+2. NÃO clique em Salvar.
+3. Clique imediatamente em Atualizar seções.
+4. A escolha deve permanecer.
+5. Saia e volte: deve continuar salva.
+6. Repertório e outra setlist devem permanecer sem essa alteração.
