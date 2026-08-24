@@ -1,25 +1,36 @@
-SET • Stage v11
+SET • Stage v12 — Overrides + PDF + Mapa de execução
 
 NOVO
-- Repertório permanente em public.songs.
-- Criação, edição e arquivamento de músicas pela interface.
-- Várias setlists em public.setlists.
-- Músicas das setlists continuam no repertório; public.setlist_songs só cria vínculos.
-- Ordem das músicas por setlist, com subir/descer/remover.
-- Tom, capo e combinados podem ter override específico por setlist.
-- Modo Instrumental e Modo Vocal.
-- Mapa vocal por seção: uníssono, líder, V1+V2, 3 vozes, homens, mulheres, backs etc.
-- Modo Palco usa a MESMA cifra/guia vocal renderizado na tela normal.
-- Correção estrutural do bug "editei a cifra, mas o palco mostra a antiga".
-- Migração automática: se a conta ainda não tiver músicas na tabela songs, a v11 importa o repertório inicial e cria uma setlist "Set atual".
+• Cifra específica por setlist (chart_override).
+• Letra específica por setlist (lyrics_override).
+• Arranjo vocal específico por setlist (vocal_map_override).
+• Mapa específico por setlist (song_map_override).
+• Herança automática do Repertório quando não há override.
+• Edição vocal dentro de uma setlist não altera mais o Repertório nem outras setlists.
+• Edição da cifra dentro de uma setlist cria uma versão só daquela apresentação.
+• Tom original inteligente:
+  1) voltar só ao tom/capo original, mantendo personalizações;
+  2) restaurar todo o conteúdo do Repertório.
+• Combinados no Modo Palco em painel retrátil.
+• Mapa com instruções por seção (ex.: “bateria entra”, “abre 3 vozes”).
+  Essas instruções aparecem junto às seções na cifra/letra, inclusive no palco.
+• Importar PDF pelo Repertório:
+  - leitura local no navegador com PDF.js;
+  - tentativa de extrair título, artista, tom, capo, BPM, compasso, cifra, letra e mapa;
+  - sempre abre a tela de revisão antes de salvar.
+  - PDFs com duas colunas ou diagramação complexa podem precisar de correções manuais.
 
 PUBLICAÇÃO
-1. Extraia o ZIP.
-2. No GitHub, substitua index.html pelo novo index.html.
-3. Commit sugerido: "Atualiza SET Stage para v11 repertório e vocal".
-4. Aguarde a Vercel publicar.
-5. Abra o mesmo domínio.
-6. Entre com a conta que já funciona.
+1. Extraia este ZIP.
+2. Substitua o index.html no GitHub.
+3. Commit sugerido: “Atualiza SET Stage para v12 overrides e PDF”.
+4. Aguarde a Vercel mostrar Ready.
+5. Use o mesmo domínio e a mesma conta.
 
-OBSERVAÇÃO
-A edição da cifra-base é feita no Repertório. Dentro de uma setlist, tom/capo/notas podem ser específicos daquele evento sem alterar a música-base.
+TESTES RECOMENDADOS
+1. Em uma setlist, editar Vocal e confirmar que o Repertório não muda.
+2. Em uma setlist, editar Cifra e confirmar que outra setlist não muda.
+3. Testar Tom original nas duas opções.
+4. Testar Combinados no Modo Palco.
+5. Editar instrução de uma seção do mapa e conferir no palco.
+6. Testar Importar PDF com uma cifra real e revisar os campos.
