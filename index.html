@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b10">
-<title>SET • Stage v12-A</title>
+<title>SET • Stage v12-A.1</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -64,7 +64,7 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.04;margin:0 0 6px;letter-spacing
 <body>
 <div class="app">
  <aside class="sidebar">
-  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco • v12-A</div></div></div>
+  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco • v12-A.1</div></div></div>
   <div class="tabs"><button class="tab active" id="libraryTab">Repertório</button><button class="tab" id="setlistTab">Setlists</button></div>
   <div id="libraryControls">
    <div class="side-actions"><button class="btn primary small" id="newSongBtn">+ Música</button></div>
@@ -715,7 +715,7 @@ function renderChords(){
 function renderVocalGrid(){
  const s=currentSong();if(!s)return;const sections=sectionsFromSong(s),existing=vocalMapObj(s);
  $("vocalGrid").innerHTML=sections.map(sec=>{const v=existing.find(x=>(x.section||"").toLowerCase()===sec.toLowerCase())||{};return `<div class="vocal-row" data-section="${escapeHtml(sec)}"><input value="${escapeHtml(sec)}" disabled><select><option value="">Sem indicação</option>${["Uníssono","Líder / solo","Todos","V1 + V2","3 vozes","Homens","Mulheres","Backs respondem","Livre / espontâneo"].map(o=>`<option ${v.assignment===o?"selected":""}>${o}</option>`).join("")}</select><input class="vnote" placeholder="Ex.: abre terça acima" value="${escapeHtml(v.note||"")}"></div>`}).join("")||'<div class="notice">Adicione seções ao mapa da música.</div>';
- $("vocalGrid").querySelectorAll(".vocal-row").forEach(row=>{row.querySelector("select").addEventListener("change",saveVocalGridDebounced);row.querySelector(".vnote").addEventListener("input",saveVocalGridDebounced)})
+ $("vocalGrid").querySelectorAll(".vocal-row").forEach(row=>{row.querySelector("select").addEventListener("change",saveVocalGridNow);row.querySelector(".vnote").addEventListener("input",saveVocalGridDebounced)})
 }
 function renderMapEditor(){
  const s=currentSong();if(!s)return;const meta=normalizeMap(s.song_map);$("mapEditor").innerHTML=meta.sections.map((sec,i)=>`<div class="vocal-row" data-mi="${i}" style="margin-top:7px"><input value="${escapeHtml(sec)}"><button class="btn small" data-mup="${i}">↑</button><div><button class="btn small" data-mdown="${i}">↓</button> <button class="btn danger small" data-mdel="${i}">×</button></div></div>`).join("")+`<button class="btn small" id="mapAdd" style="margin-top:8px">+ seção</button>`;
@@ -815,27 +815,28 @@ async function moveSetlistItem(id,d){const arr=setlistItems.slice().sort((a,b)=>
 async function normalizePositions(){setlistItems.sort((a,b)=>(a.position||0)-(b.position||0));for(let i=0;i<setlistItems.length;i++)setlistItems[i].position=i+1;await Promise.all(setlistItems.map(x=>db.from("setlist_songs").update({position:x.position}).eq("id",x.id)))}
 async function deleteSetlist(){if(!currentSetlistId||!confirm("Excluir esta setlist? As músicas continuarão no repertório."))return;await db.from("setlist_songs").delete().eq("setlist_id",currentSetlistId);const r=await db.from("setlists").delete().eq("id",currentSetlistId);if(r.error){alert(r.error.message);return}setlists=setlists.filter(s=>s.id!==currentSetlistId);currentSetlistId=setlists[0]?.id||null;await loadSetlistItems();currentSongId=setlistItems[0]?.song_id||songs[0]?.id||null;render()}
 
-function saveVocalGridDebounced(){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{
- const s=currentSong();if(!s)return;
- const data=[...$("vocalGrid").querySelectorAll(".vocal-row")].map(row=>({section:row.dataset.section,assignment:row.querySelector("select").value,note:row.querySelector(".vnote").value})).filter(x=>x.assignment||x.note);
+function readVocalGrid(){return [...$("vocalGrid").querySelectorAll(".vocal-row")].map(row=>({section:row.dataset.section,assignment:row.querySelector("select").value,note:row.querySelector(".vnote").value})).filter(x=>x.assignment||x.note)}
+async function saveVocalGridNow(){
+ clearTimeout(saveTimer);const s=currentSong();if(!s)return;
+ const data=readVocalGrid();
  if(sideMode==="setlist"){
   const item=activeSetlistItem();if(!item)return;
   item.vocal_map_override=data;
   const r=await db.from("setlist_songs").update({vocal_map_override:data,updated_at:new Date().toISOString()}).eq("id",item.id);
-  if(r.error){setSync("err","Erro",r.error.message);return}
+  if(r.error){setSync("err","Erro",r.error.message);return false}
   setSync("ok","Sincronizado");
- }else{
-  s.vocal_map=data;
-  await saveSongNow();
- }
-},600)}
+ }else{s.vocal_map=data;await saveSongNow()}
+ return true
+}
+function saveVocalGridDebounced(){clearTimeout(saveTimer);saveTimer=setTimeout(saveVocalGridNow,600)}
+async function syncVocalSections(){const ok=await saveVocalGridNow();if(ok!==false)renderVocalGrid()}
 
 $("libraryTab").onclick=()=>{sideMode="library";editOpen=false;if(!currentSongId)currentSongId=songs[0]?.id||null;render()};
 $("setlistTab").onclick=async()=>{sideMode="setlist";editOpen=false;if(!currentSetlistId&&setlists.length)currentSetlistId=setlists[0].id;await loadSetlistItems();currentSongId=setlistItems[0]?.song_id||null;render()};
 $("setlistSelect").onchange=async e=>{currentSetlistId=Number(e.target.value)||null;await loadSetlistItems();currentSongId=setlistItems[0]?.song_id||null;render()};
 $("newSongBtn").onclick=()=>openSongForm();$("editSongBtn").onclick=()=>{const s=currentSong();if(s)openSongForm(s)};$("saveSongModalBtn").onclick=saveSongForm;$("archiveSongBtn").onclick=archiveCurrentSong;
 $("newSetlistBtn").onclick=()=>openModal("setlistModal");$("saveSetlistBtn").onclick=createSetlist;$("addToSetlistBtn").onclick=openPicker;$("deleteSetlistBtn").onclick=deleteSetlist;
-$("instrumentalBtn").onclick=()=>setView("instrumental");$("vocalBtn").onclick=()=>setView("vocal");$("editContentBtn").onclick=toggleEdit;$("syncVocalSectionsBtn").onclick=renderVocalGrid;
+$("instrumentalBtn").onclick=()=>setView("instrumental");$("vocalBtn").onclick=()=>setView("vocal");$("editContentBtn").onclick=toggleEdit;$("syncVocalSectionsBtn").onclick=syncVocalSections;
 $("fontDownBtn").onclick=()=>{fontSize=Math.max(14,fontSize-1);render()};$("fontUpBtn").onclick=()=>{fontSize=Math.min(34,fontSize+1);render()};
 $("saveBtn").onclick=saveCurrentFields;$("flatBtn").onclick=()=>transposeCurrent(-1);$("sharpBtn").onclick=()=>transposeCurrent(1);$("originalBtn").onclick=restoreOriginal;
 $("stageBtn").onclick=toggleStage;$("stageExit").onclick=toggleStage;$("colPrev").onclick=()=>stageScroll(-1);$("colNext").onclick=()=>stageScroll(1);$("prevBtn").onclick=()=>stepSong(-1);$("nextBtn").onclick=()=>stepSong(1);
