@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b10">
-<title>SET • Stage v12</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<title>SET • Stage v11</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -60,30 +59,15 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.04;margin:0 0 6px;letter-spacing
 .hidden{display:none!important}
 @media(max-width:1080px){.app{display:block}.sidebar{position:sticky;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px 12px}.brandrow{margin-bottom:6px}.tabs{margin:8px 0}.search,.sidebar-foot{display:none}.side-list{display:flex;gap:7px;overflow-x:auto}.list-section{display:contents}.list-section h3{display:none}.song{flex:0 0 auto;width:auto;min-width:155px;max-width:230px}.order-tools{display:none}.topnav{top:112px;height:57px;padding:8px 13px}main{padding:15px}.layout{grid-template-columns:1fr}.rightcol{position:static;grid-template-columns:1fr 1fr}.hero{grid-template-columns:1fr}.hero-actions{justify-content:flex-start}.stage .chart-view,.stage .vocal-view{column-width:calc(50vw - 34px);column-gap:26px}}
 @media(max-width:680px){.topnav{top:110px}.pill{display:none}.view-switch button{padding:7px 9px;font-size:12px}main{padding:10px}.hero-actions{overflow:auto;flex-wrap:nowrap;padding-bottom:3px}.hero-actions .btn{flex:0 0 auto}h1{font-size:28px}.quickbar{display:grid;grid-template-columns:1fr 1fr}.quick{justify-content:space-between}.rightcol{grid-template-columns:1fr}.chart-view,.vocal-view{min-height:60vh;font-size:16px;padding:14px}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.vocal-row{grid-template-columns:1fr}.stage main{padding:9px 11px 72px}.stage .hero{padding-right:65px}.stage .chart-view,.stage .vocal-view{column-width:calc(100vw - 28px);column-gap:18px;height:calc(100vh - 104px);font-size:17px}}
-
-.map-detail{display:flex;align-items:center;gap:5px;white-space:nowrap}
-.map-cue-dot{width:6px;height:6px;border-radius:50%;background:#81d9ff;display:inline-block}
-.map-cue{display:block;margin:5px 0 3px;font-family:Inter,system-ui,sans-serif;color:#81d9ff;font-weight:750;font-size:.82em;break-inside:avoid}
-.map-editor-v12{display:grid;gap:7px;margin-top:9px}
-.map-editor-row-v12{display:grid;grid-template-columns:30px minmax(120px,.8fr) minmax(160px,1.3fr) auto;gap:7px;align-items:center}
-.map-editor-row-v12 input{width:100%;background:#090d13;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px}
-.stage-notes-toggle,.stage-notes-panel{display:none}
-.stage .stage-notes-toggle{display:block;position:fixed;right:78px;top:14px;z-index:83}
-.stage .stage-notes-panel.open{display:block;position:fixed;right:16px;top:65px;width:min(390px,calc(100vw - 32px));max-height:42vh;overflow:auto;z-index:82;background:rgba(15,20,29,.97);border:1px solid #303a4a;border-radius:15px;padding:13px 15px;box-shadow:var(--shadow)}
-.stage-notes-panel h3{margin:0 0 7px;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:#9aa6b9}.stage-notes-panel div{white-space:pre-wrap;font-size:14px;line-height:1.5}
-.import-hint{padding:10px 12px;border:1px solid rgba(129,217,255,.25);background:rgba(129,217,255,.07);border-radius:11px;color:#bfefff;font-size:12px;line-height:1.45;margin:10px 0}
-.restore-options{display:grid;gap:9px;margin-top:13px}.restore-choice{text-align:left;padding:13px;border:1px solid var(--line);background:#090d13;color:var(--text);border-radius:12px}.restore-choice strong{display:block;margin-bottom:3px}.restore-choice small{color:var(--muted)}
-@media(max-width:680px){.map-editor-row-v12{grid-template-columns:26px 1fr}.map-editor-row-v12 .cue-input{grid-column:2}.map-editor-row-v12 .map-buttons{grid-column:2}.stage .stage-notes-toggle{right:68px}}
-
 </style>
 </head>
 <body>
 <div class="app">
  <aside class="sidebar">
-  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco • v12</div></div></div>
+  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco</div></div></div>
   <div class="tabs"><button class="tab active" id="libraryTab">Repertório</button><button class="tab" id="setlistTab">Setlists</button></div>
   <div id="libraryControls">
-   <div class="side-actions"><button class="btn primary small" id="newSongBtn">+ Música</button><button class="btn small" id="importPdfBtn">Importar PDF</button><input id="pdfInput" type="file" accept="application/pdf,.pdf" class="hidden"></div>
+   <div class="side-actions"><button class="btn primary small" id="newSongBtn">+ Música</button></div>
   </div>
   <div id="setlistControls" class="hidden">
    <select class="setlist-select" id="setlistSelect"></select>
@@ -139,8 +123,6 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.04;margin:0 0 6px;letter-spacing
    </div>
 
    <button class="btn stage-exit" id="stageExit">Sair</button>
-   <button class="btn stage-notes-toggle" id="stageNotesToggle">Combinados</button>
-   <div class="stage-notes-panel" id="stageNotesPanel"><h3>Combinados</h3><div id="stageNotesText"></div></div>
    <div class="stage-nav"><button class="stage-arrow" id="prevBtn">←</button><div class="stage-mid"><button class="stage-arrow" id="colPrev">‹</button><button class="stage-arrow" id="colNext">›</button></div><button class="stage-arrow" id="nextBtn">→</button></div>
   </main>
  </div>
@@ -148,7 +130,7 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.04;margin:0 0 6px;letter-spacing
 
 <div class="modal" id="authModal"><div class="modal-box"><h3>Sincronizar SET • Stage</h3><p>Use a mesma conta em todos os dispositivos da equipe.</p><div class="form-grid"><div class="full"><label>E-mail</label><input id="authEmail" type="email"></div><div class="full"><label>Senha</label><input id="authPassword" type="password"></div></div><div class="modal-actions"><button class="btn" data-close="authModal">Cancelar</button><button class="btn" id="signupBtn">Criar conta</button><button class="btn primary" id="loginBtn">Entrar</button></div><div class="notice" id="authMsg"></div></div></div>
 
-<div class="modal" id="songModal"><div class="modal-box"><h3 id="songModalTitle">Nova música</h3><p>Cadastro permanente do repertório.</p><div id="pdfReviewHint" class="import-hint hidden">PDF lido. Revise os campos abaixo antes de adicionar ao repertório — PDFs com duas colunas ou diagramação incomum podem precisar de ajustes.</div><div class="form-grid">
+<div class="modal" id="songModal"><div class="modal-box"><h3 id="songModalTitle">Nova música</h3><p>Cadastro permanente do repertório.</p><div class="form-grid">
  <div><label>Título</label><input id="fTitle"></div><div><label>Artista / ministério</label><input id="fArtist"></div>
  <div><label>Tom original</label><input id="fOriginalKey"></div><div><label>Tom do repertório</label><input id="fSetKey"></div>
  <div><label>Capo</label><input id="fCapo" type="number" min="0" max="11" value="0"></div><div><label>BPM</label><input id="fBpm" type="number"></div>
@@ -158,11 +140,6 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.04;margin:0 0 6px;letter-spacing
  </div><div class="modal-actions"><button class="btn danger hidden" id="archiveSongBtn">Arquivar</button><button class="btn" data-close="songModal">Cancelar</button><button class="btn primary" id="saveSongModalBtn">Salvar música</button></div></div></div>
 
 <div class="modal" id="setlistModal"><div class="modal-box"><h3>Nova setlist</h3><div class="form-grid"><div class="full"><label>Nome</label><input id="slName" placeholder="Culto Domingo"></div><div><label>Data</label><input id="slDate" type="date"></div><div><label>Observação</label><input id="slNotes"></div></div><div class="modal-actions"><button class="btn" data-close="setlistModal">Cancelar</button><button class="btn primary" id="saveSetlistBtn">Criar setlist</button></div></div></div>
-
-<div class="modal" id="restoreModal"><div class="modal-box"><h3>Tom original</h3><p>Esta música tem personalizações nesta setlist. Escolha o que deseja restaurar.</p><div class="restore-options">
-<button class="restore-choice" id="restoreToneOnly"><strong>Voltar apenas ao tom original</strong><small>Mantém cifra, letra, mapa e arranjo vocal personalizados desta setlist.</small></button>
-<button class="restore-choice" id="restoreAll"><strong>Restaurar conteúdo do Repertório</strong><small>Remove cifra, letra, mapa, vocal e combinados personalizados desta setlist e volta ao tom/capo originais.</small></button>
-</div><div class="modal-actions"><button class="btn" data-close="restoreModal">Cancelar</button></div></div></div>
 
 <div class="modal" id="pickerModal"><div class="modal-box"><h3>Adicionar músicas à setlist</h3><p>As músicas continuam no repertório; aqui você só escolhe quais entram neste evento.</p><div id="libraryPicker" class="library-picker"></div><div class="modal-actions"><button class="btn" data-close="pickerModal">Fechar</button></div></div></div>
 
@@ -653,17 +630,11 @@ function desiredShapeKey(soundKey,capo){const [r,s]=splitKey(soundKey);return r?
 function transposeChordToken(token,delta,flatPref=false){const m=token.match(/^([A-G](?:#|b)?)([^\/\s]*)(?:\/([A-G](?:#|b)?))?$/);if(!m)return token;return shiftRoot(m[1],delta,flatPref)+m[2]+(m[3]?"/"+shiftRoot(m[3],delta,flatPref):"")}
 function transposeText(text,delta,targetKey=""){const fp=preferFlats(targetKey);return (text||"").replace(/(^|[^A-Za-zÀ-ÿ])([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|M)?(?:\d+)?(?:\([^)]+\))?(?:\/[A-G](?:#|b)?)?)(?=$|[^A-Za-zÀ-ÿ])/g,(m,p,c)=>p+transposeChordToken(c,delta,fp))}
 function escapeHtml(t){return (t||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))}
-function normalizeSection(x){
- if(x&&typeof x==="object") return {label:String(x.label??x.name??""),cue:String(x.cue??x.instruction??"")};
- return {label:String(x??""),cue:""};
-}
 function normalizeMap(raw){
- if(Array.isArray(raw)) return {sections:raw.map(normalizeSection),chartShapeKey:null,originalCapo:0};
- if(raw&&typeof raw==="object") return {sections:(Array.isArray(raw.sections)?raw.sections:[]).map(normalizeSection),chartShapeKey:raw.chartShapeKey||null,originalCapo:Number(raw.originalCapo||0)};
+ if(Array.isArray(raw)) return {sections:raw,chartShapeKey:null,originalCapo:0};
+ if(raw&&typeof raw==="object") return {sections:Array.isArray(raw.sections)?raw.sections:[],chartShapeKey:raw.chartShapeKey||null,originalCapo:Number(raw.originalCapo||0)};
  return {sections:[],chartShapeKey:null,originalCapo:0};
 }
-function mapForSong(song){const item=sideMode==="setlist"?activeSetlistItem():null;return normalizeMap(item?.song_map_override??song.song_map)}
-function sectionCue(song,section){const target=String(section||"").replace(/\s*[×x]\s*\d+\s*$/i,"").trim().toLowerCase();const sec=mapForSong(song).sections.find(x=>x.label.replace(/\s*[×x]\s*\d+\s*$/i,"").trim().toLowerCase()===target);return sec?.cue||""}
 function songById(id){return songs.find(s=>Number(s.id)===Number(id))}
 function activeSetlistItem(){return setlistItems.find(i=>Number(i.song_id)===Number(currentSongId))}
 function effectiveSettings(song){
@@ -672,31 +643,26 @@ function effectiveSettings(song){
 }
 function baseShape(song){const meta=normalizeMap(song.song_map);return meta.chartShapeKey||desiredShapeKey(song.set_key||song.original_key||"",song.capo||0)||song.set_key||song.original_key||""}
 function displayChart(song){
- const item=sideMode==="setlist"?activeSetlistItem():null;
- if(item?.chart_override!=null)return item.chart_override;
- const s=effectiveSettings(song),target=desiredShapeKey(s.key,s.capo)||s.key,base=baseShape(song);
+ const s=effectiveSettings(song), target=desiredShapeKey(s.key,s.capo)||s.key, base=baseShape(song);
  return transposeText(song.chart||"",keyDelta(base,target),target);
 }
-function effectiveLyrics(song){const item=sideMode==="setlist"?activeSetlistItem():null;return (item?.lyrics_override??song.lyrics??stripChordLines(song.chart||"")).trim()}
-function effectiveVocalMap(song){const item=sideMode==="setlist"?activeSetlistItem():null;return Array.isArray(item?.vocal_map_override)?item.vocal_map_override:(Array.isArray(song.vocal_map)?song.vocal_map:[])}
 function stripChordLines(chart){
  const lines=(chart||"").split("\n");
  const chordRx=/^\s*(?:[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|M)?\d*(?:\([^)]+\))?(?:\/[A-G](?:#|b)?)?\s*)+$/;
  return lines.filter(line=>/^\[[^\]]+\]\s*$/.test(line.trim())||!chordRx.test(line.trim())).join("\n").replace(/\n{3,}/g,"\n\n").trim();
 }
+function vocalMapObj(song){return Array.isArray(song.vocal_map)?song.vocal_map:[]}
 function renderVocalText(song){
- const lyrics=effectiveLyrics(song),cues=effectiveVocalMap(song);
- return escapeHtml(lyrics).replace(/^\[([^\]]+)\]$/gm,(m,sec)=>{
+ const lyrics=(song.lyrics||stripChordLines(song.chart||"")).trim();
+ const cues=vocalMapObj(song);
+ let safe=escapeHtml(lyrics).replace(/^\[([^\]]+)\]$/gm,(m,sec)=>{
    const cue=cues.find(c=>(c.section||"").toLowerCase()===sec.toLowerCase());
    const cueText=cue&&(cue.assignment||cue.note)?`<span class="vocal-cue">${escapeHtml([cue.assignment,cue.note].filter(Boolean).join(" • "))}</span>`:"";
-   const mc=sectionCue(song,sec);return `<span class="section-label">[${escapeHtml(sec)}]</span>${cueText}${mc?`<span class="map-cue">↳ ${escapeHtml(mc)}</span>`:""}`;
+   return `<span class="section-label">[${escapeHtml(sec)}]</span>${cueText}`;
  });
+ return safe;
 }
-function renderInstrumentText(song){return escapeHtml(displayChart(song)).replace(/^\[([^\]]+)\]$/gm,(m,sec)=>{const mc=sectionCue(song,sec);return `<span class="section-label">[${escapeHtml(sec)}]</span>${mc?`<span class="map-cue">↳ ${escapeHtml(mc)}</span>`:""}`})}
-function sectionsFromSong(song){
- const map=mapForSong(song).sections.filter(x=>x.label);if(map.length)return [...new Set(map.map(x=>x.label.replace(/\s*[×x]\s*\d+\s*$/i,"").trim()))];
- const found=[];effectiveLyrics(song).replace(/^\[([^\]]+)\]$/gm,(m,s)=>{if(!found.includes(s))found.push(s);return m});return found
-}
+function sectionsFromSong(song){const map=normalizeMap(song.song_map).sections.filter(Boolean);if(map.length)return [...new Set(map.map(x=>String(x).replace(/\s*[×x]\s*\d+\s*$/i,"").trim()))];const found=[];(song.lyrics||song.chart||"").replace(/^\[([^\]]+)\]$/gm,(m,s)=>{if(!found.includes(s))found.push(s);return m});return found}
 
 const chordShapes={"C":["x","3","2","0","1","0"],"Cm":["x","3","5","5","4","3"],"C#":["x","4","6","6","6","4"],"C#m":["x","4","6","6","5","4"],"D":["x","x","0","2","3","2"],"Dm":["x","x","0","2","3","1"],"D#":["x","6","8","8","8","6"],"D#m":["x","6","8","8","7","6"],"E":["0","2","2","1","0","0"],"Em":["0","2","2","0","0","0"],"F":["1","3","3","2","1","1"],"Fm":["1","3","3","1","1","1"],"F#":["2","4","4","3","2","2"],"F#m":["2","4","4","2","2","2"],"G":["3","2","0","0","0","3"],"Gm":["3","5","5","3","3","3"],"G#":["4","6","6","5","4","4"],"G#m":["4","6","6","4","4","4"],"A":["x","0","2","2","2","0"],"Am":["x","0","2","2","1","0"],"A#":["x","1","3","3","3","1"],"A#m":["x","1","3","3","2","1"],"B":["x","2","4","4","4","2"],"Bm":["x","2","4","4","3","2"]};
 function extractChords(text){const rx=/(^|[^A-Za-zÀ-ÿ])([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|M)?(?:\d+)?(?:\([^)]+\))?(?:\/[A-G](?:#|b)?)?)(?=$|[^A-Za-zÀ-ÿ])/g,out=[];let m;while((m=rx.exec(text))!==null)if(!out.includes(m[2]))out.push(m[2]);return out}
@@ -712,10 +678,10 @@ function render(){
  const eff=effectiveSettings(s), shape=desiredShapeKey(eff.key,eff.capo);
  $("title").textContent=s.title;$("meta").textContent=`${s.artist?s.artist+" · ":""}Original ${s.original_key||"—"}${sideMode==="setlist"?" · setlist ativa":""} · formas em ${shape||eff.key||"—"}${user?" · "+user.email:""}`;
  $("key").value=eff.key||"";$("capo").value=eff.capo??0;$("bpm").value=s.bpm??"";$("meter").value=s.meter??"";$("notes").value=eff.notes||"";
- const map=mapForSong(s).sections;$("map").innerHTML=map.map(x=>`<span class="chip map-detail">${escapeHtml(x.label)}${x.cue?'<span class="map-cue-dot" title="'+escapeHtml(x.cue)+'"></span>':""}</span>`).join("")||'<span class="notice">Sem mapa cadastrado.</span>';
- $("chartView").innerHTML=renderInstrumentText(s);$("chartView").style.fontSize=fontSize+"px";
+ const map=normalizeMap(s.song_map).sections;$("map").innerHTML=map.map(x=>`<span class="chip">${escapeHtml(String(x))}</span>`).join("")||'<span class="notice">Sem mapa cadastrado.</span>';
+ $("chartView").innerHTML=escapeHtml(displayChart(s)).replace(/^\[([^\]]+)\]$/gm,'<span class="section-label">[$1]</span>');$("chartView").style.fontSize=fontSize+"px";
  $("vocalView").innerHTML=renderVocalText(s);$("vocalView").style.fontSize=fontSize+"px";
- $("chartEdit").value=displayChart(s);$("lyricsEdit").value=effectiveLyrics(s);$("stageNotesText").textContent=eff.notes||"Sem combinados para esta música.";
+ $("chartEdit").value=displayChart(s);$("lyricsEdit").value=s.lyrics||stripChordLines(s.chart||"");
  renderChords();renderVocalGrid();renderMapEditor();
  $("refBtn").classList.toggle("hidden",!s.reference_url);
  $("contentTitle").textContent=viewMode==="instrumental"?"Cifra do set":"Guia vocal";$("editContentBtn").textContent=viewMode==="instrumental"?(editOpen?"Concluir edição":"Editar cifra"):(editOpen?"Concluir edição":"Editar letra");
@@ -749,23 +715,28 @@ function renderVocalGrid(){
  $("vocalGrid").querySelectorAll(".vocal-row").forEach(row=>{row.querySelector("select").addEventListener("change",saveVocalGridDebounced);row.querySelector(".vnote").addEventListener("input",saveVocalGridDebounced)})
 }
 function renderMapEditor(){
- const s=currentSong();if(!s)return;const meta=mapForSong(s);
- $("mapEditor").className=mapEdit?"map-editor-v12 editonly":"hidden editonly";
- $("mapEditor").innerHTML=meta.sections.map((sec,i)=>`<div class="map-editor-row-v12" data-mi="${i}"><div class="notice">${String(i+1).padStart(2,"0")}</div><input class="label-input" value="${escapeHtml(sec.label)}" placeholder="Seção"><input class="cue-input" value="${escapeHtml(sec.cue||"")}" placeholder="Instrução: ex. bateria entra / abre 3 vozes"><div class="map-buttons"><button class="btn small" data-mup="${i}">↑</button> <button class="btn small" data-mdown="${i}">↓</button> <button class="btn danger small" data-mdel="${i}">×</button></div></div>`).join("")+`<button class="btn small" id="mapAdd" style="margin-top:8px">+ seção</button>`;
- $("mapEditor").querySelectorAll("[data-mi]").forEach(row=>{const i=Number(row.dataset.mi);row.querySelector(".label-input").addEventListener("input",e=>updateMapSection(i,"label",e.target.value));row.querySelector(".cue-input").addEventListener("input",e=>updateMapSection(i,"cue",e.target.value))});
- $("mapEditor").querySelectorAll("[data-mup]").forEach(b=>b.onclick=()=>moveMap(Number(b.dataset.mup),-1));$("mapEditor").querySelectorAll("[data-mdown]").forEach(b=>b.onclick=()=>moveMap(Number(b.dataset.mdown),1));$("mapEditor").querySelectorAll("[data-mdel]").forEach(b=>b.onclick=()=>deleteMapSection(Number(b.dataset.mdel)));
- const add=$("mapAdd");if(add)add.onclick=addMapSection
+ const s=currentSong();if(!s)return;const meta=normalizeMap(s.song_map);$("mapEditor").innerHTML=meta.sections.map((sec,i)=>`<div class="vocal-row" data-mi="${i}" style="margin-top:7px"><input value="${escapeHtml(sec)}"><button class="btn small" data-mup="${i}">↑</button><div><button class="btn small" data-mdown="${i}">↓</button> <button class="btn danger small" data-mdel="${i}">×</button></div></div>`).join("")+`<button class="btn small" id="mapAdd" style="margin-top:8px">+ seção</button>`;
+ $("mapEditor").querySelectorAll("[data-mi] input").forEach(inp=>inp.addEventListener("input",e=>{const i=Number(e.target.closest("[data-mi]").dataset.mi);const m=normalizeMap(s.song_map);m.sections[i]=e.target.value;s.song_map=m;queueSongSave()}));
+ $("mapEditor").querySelectorAll("[data-mup]").forEach(b=>b.onclick=()=>moveMap(Number(b.dataset.mup),-1));$("mapEditor").querySelectorAll("[data-mdown]").forEach(b=>b.onclick=()=>moveMap(Number(b.dataset.mdown),1));$("mapEditor").querySelectorAll("[data-mdel]").forEach(b=>b.onclick=()=>{const m=normalizeMap(s.song_map);m.sections.splice(Number(b.dataset.mdel),1);s.song_map=m;saveSongNow()});
+ const add=$("mapAdd");if(add)add.onclick=()=>{const m=normalizeMap(s.song_map);m.sections.push("Nova seção");s.song_map=m;saveSongNow()}
 }
-async function persistMap(meta){
- const s=currentSong();if(!s)return;
- if(sideMode==="setlist"){const item=activeSetlistItem();if(!item)return;item.song_map_override=meta;const r=await db.from("setlist_songs").update({song_map_override:meta,updated_at:new Date().toISOString()}).eq("id",item.id);if(r.error){setSync("err","Erro",r.error.message);return}}
- else{s.song_map=meta;await saveSongNow();return}
- setSync("ok","Sincronizado");render()
+function moveMap(i,d){const s=currentSong(),m=normalizeMap(s.song_map),t=i+d;if(t<0||t>=m.sections.length)return;[m.sections[i],m.sections[t]]=[m.sections[t],m.sections[i]];s.song_map=m;saveSongNow()}
+
+function openModal(id){$(id).classList.add("open")}function closeModal(id){$(id).classList.remove("open")}
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
+
+async function ensureSeed(){
+ if(!user)return;
+ const {data,count,error}=await db.from("songs").select("id",{count:"exact"});
+ if(error)throw error;
+ if((count||data?.length||0)>0)return;
+ setSync("busy","Importando repertório","Criando sua biblioteca inicial...");
+ const payload=defaults.map(s=>{const meta={sections:s.map||[],chartShapeKey:s.shapeKey||desiredShapeKey(s.key||s.originalKey,s.capo||0)||s.key,originalCapo:Number(s.sourceCapo??s.capo??0)};return {user_id:user.id,title:s.title,artist:s.artist||"",original_key:s.originalKey||s.key||"",set_key:s.key||s.originalKey||"",capo:Number(s.capo||0),bpm:s.bpm===""?null:Number(s.bpm)||null,meter:s.meter||null,chart:s.chart||"",song_map:meta,notes:s.notes||"",lyrics:stripChordLines(s.chart||""),vocal_map:[],reference_url:s.ref||null,is_active:true,updated_at:new Date().toISOString()}}); 
+ const ins=await db.from("songs").insert(payload).select("*");if(ins.error)throw ins.error;
+ const sl=await db.from("setlists").insert({user_id:user.id,name:"Set atual",event_date:null,notes:"Migrado automaticamente da versão anterior.",updated_at:new Date().toISOString()}).select("*").single();if(sl.error)throw sl.error;
+ const links=ins.data.map((s,i)=>({setlist_id:sl.data.id,song_id:s.id,position:i+1,set_key:null,capo:null,notes:null,updated_at:new Date().toISOString()}));
+ const li=await db.from("setlist_songs").insert(links);if(li.error)throw li.error;
 }
-function updateMapSection(i,key,value){const m=mapForSong(currentSong());if(!m.sections[i])return;m.sections[i][key]=value;clearTimeout(saveTimer);saveTimer=setTimeout(()=>persistMap(m),650)}
-function addMapSection(){const m=mapForSong(currentSong());m.sections.push({label:"Nova seção",cue:""});persistMap(m)}
-function deleteMapSection(i){const m=mapForSong(currentSong());m.sections.splice(i,1);persistMap(m)}
-function moveMap(i,d){const m=mapForSong(currentSong()),t=i+d;if(t<0||t>=m.sections.length)return;[m.sections[i],m.sections[t]]=[m.sections[t],m.sections[i]];persistMap(m)}
 async function loadAll(){
  if(!user)return;setSync("busy","Carregando...","Buscando repertório e setlists.");
  try{
@@ -786,38 +757,30 @@ async function saveSongNow(){
  const r=await db.from("songs").update(payload).eq("id",s.id).select("*").single();if(r.error){setSync("err","Erro",r.error.message);return}Object.assign(s,r.data);setSync("ok","Sincronizado");render()
 }
 async function saveCurrentFields(){
- const s=currentSong();if(!s)return;const newKey=$("key").value.trim(),newCapo=Math.max(0,Math.min(11,Number($("capo").value)||0));
+ const s=currentSong();if(!s)return;
+ const newKey=$("key").value.trim(),newCapo=Math.max(0,Math.min(11,Number($("capo").value)||0));
  if(sideMode==="setlist"){
-  const item=activeSetlistItem();if(item){
-   const oldKey=item.set_key??s.set_key??s.original_key??"",oldCapo=item.capo??s.capo??0;
-   if(item.chart_override!=null&&(oldKey!==newKey||Number(oldCapo)!==Number(newCapo))){const os=desiredShapeKey(oldKey,oldCapo)||oldKey,ns=desiredShapeKey(newKey,newCapo)||newKey;item.chart_override=transposeText(item.chart_override,keyDelta(os,ns),ns)}
-   item.set_key=newKey||null;item.capo=newCapo;item.notes=$("notes").value;
-   const r=await db.from("setlist_songs").update({set_key:item.set_key,capo:item.capo,notes:item.notes,chart_override:item.chart_override,updated_at:new Date().toISOString()}).eq("id",item.id);if(r.error){setSync("err","Erro",r.error.message);return}
-  }
+  const item=activeSetlistItem();if(item){item.set_key=newKey||null;item.capo=newCapo;item.notes=$("notes").value;const r=await db.from("setlist_songs").update({set_key:item.set_key,capo:item.capo,notes:item.notes,updated_at:new Date().toISOString()}).eq("id",item.id);if(r.error){setSync("err","Erro",r.error.message);return}}
   s.bpm=$("bpm").value?Number($("bpm").value):null;s.meter=$("meter").value.trim()||null;await saveSongNow()
  }else{
-  const oldShape=baseShape(s),target=desiredShapeKey(newKey,newCapo)||newKey;if(oldShape&&target&&(newKey!==s.set_key||newCapo!==Number(s.capo||0))){s.chart=transposeText(s.chart||"",keyDelta(oldShape,target),target);const m=normalizeMap(s.song_map);m.chartShapeKey=target;s.song_map=m}
+  const oldShape=baseShape(s),target=desiredShapeKey(newKey,newCapo)||newKey;
+  if(oldShape&&target&&(newKey!==s.set_key||newCapo!==Number(s.capo||0))){s.chart=transposeText(s.chart||"",keyDelta(oldShape,target),target);const m=normalizeMap(s.song_map);m.chartShapeKey=target;s.song_map=m}
   s.set_key=newKey;s.capo=newCapo;s.bpm=$("bpm").value?Number($("bpm").value):null;s.meter=$("meter").value.trim()||null;s.notes=$("notes").value;await saveSongNow()
  }
 }
 async function transposeCurrent(delta){
  const s=currentSong();if(!s)return;const eff=effectiveSettings(s),[r,suf]=splitKey(eff.key);if(!r)return;$("key").value=shiftRoot(r,delta,preferFlats(eff.key))+suf;await saveCurrentFields()
 }
-function hasSetlistOverrides(item){return !!item&&(item.chart_override!=null||item.vocal_map_override!=null||item.song_map_override!=null||item.lyrics_override!=null||item.notes!=null)}
-async function restoreOriginal(){const s=currentSong();if(!s)return;if(sideMode==="setlist"&&hasSetlistOverrides(activeSetlistItem())){openModal("restoreModal");return}const m=normalizeMap(s.song_map);$("key").value=s.original_key||"";$("capo").value=m.originalCapo||s.capo||0;await saveCurrentFields()}
-async function restoreToneOnly(){closeModal("restoreModal");const s=currentSong(),item=activeSetlistItem();if(!s||!item)return;const ok=item.set_key??s.set_key??s.original_key??"",oc=item.capo??s.capo??0,tk=s.original_key||"",tc=normalizeMap(s.song_map).originalCapo||s.capo||0;if(item.chart_override!=null){const os=desiredShapeKey(ok,oc)||ok,ns=desiredShapeKey(tk,tc)||tk;item.chart_override=transposeText(item.chart_override,keyDelta(os,ns),ns)}item.set_key=tk;item.capo=tc;const r=await db.from("setlist_songs").update({set_key:tk,capo:tc,chart_override:item.chart_override,updated_at:new Date().toISOString()}).eq("id",item.id);if(r.error){setSync("err","Erro",r.error.message);return}render();setSync("ok","Sincronizado")}
-async function restoreAllOverrides(){closeModal("restoreModal");const s=currentSong(),item=activeSetlistItem();if(!s||!item)return;const payload={set_key:s.original_key||"",capo:normalizeMap(s.song_map).originalCapo||s.capo||0,notes:null,chart_override:null,vocal_map_override:null,song_map_override:null,lyrics_override:null,updated_at:new Date().toISOString()};const r=await db.from("setlist_songs").update(payload).eq("id",item.id).select("*").single();if(r.error){setSync("err","Erro",r.error.message);return}Object.assign(item,r.data);render();setSync("ok","Sincronizado")}
+async function restoreOriginal(){const s=currentSong();if(!s)return;const m=normalizeMap(s.song_map);$("key").value=s.original_key||"";$("capo").value=m.originalCapo||0;await saveCurrentFields()}
 
 async function toggleEdit(){
  const s=currentSong();if(!s)return;
  if(editOpen){
   if(viewMode==="instrumental"){
-   if(sideMode==="setlist"){const item=activeSetlistItem();if(!item)return;item.chart_override=$("chartEdit").value;const r=await db.from("setlist_songs").update({chart_override:item.chart_override,updated_at:new Date().toISOString()}).eq("id",item.id);if(r.error){setSync("err","Erro",r.error.message);return}}
-   else{s.chart=$("chartEdit").value;const eff=effectiveSettings(s),m=normalizeMap(s.song_map);m.chartShapeKey=desiredShapeKey(eff.key,eff.capo)||eff.key;s.song_map=m;await saveSongNow()}
-  }else{
-   if(sideMode==="setlist"){const item=activeSetlistItem();if(!item)return;item.lyrics_override=$("lyricsEdit").value;const r=await db.from("setlist_songs").update({lyrics_override:item.lyrics_override,updated_at:new Date().toISOString()}).eq("id",item.id);if(r.error){setSync("err","Erro",r.error.message);return}}
-   else{s.lyrics=$("lyricsEdit").value;await saveSongNow()}
-  }setSync("ok","Sincronizado")
+   if(sideMode==="setlist"&&activeSetlistItem()&&(activeSetlistItem().set_key!=null||activeSetlistItem().capo!=null)){alert("A cifra pertence ao repertório. Para editar a cifra-base, abra esta música em Repertório.");editOpen=false;render();return}
+   s.chart=$("chartEdit").value;const eff=effectiveSettings(s),m=normalizeMap(s.song_map);m.chartShapeKey=desiredShapeKey(eff.key,eff.capo)||eff.key;s.song_map=m;
+  }else s.lyrics=$("lyricsEdit").value;
+  await saveSongNow()
  }
  editOpen=!editOpen;render()
 }
@@ -825,17 +788,17 @@ function setView(mode){if(editOpen){editOpen=false}viewMode=mode;$("instrumental
 function stageScroll(d){const el=viewMode==="instrumental"?$("chartView"):$("vocalView"),max=Math.max(0,el.scrollWidth-el.clientWidth),step=Math.max(280,el.clientWidth-18);let t=el.scrollLeft+d*step;if(d>0&&t>max-25)t=max;if(d<0&&t<25)t=0;el.scrollTo({left:t,behavior:"smooth"})}
 function orderedIds(){return sideMode==="setlist"?setlistItems.slice().sort((a,b)=>(a.position||0)-(b.position||0)).map(i=>i.song_id):songs.filter(s=>s.is_active!==false).map(s=>s.id)}
 function stepSong(d){const ids=orderedIds(),i=ids.findIndex(id=>Number(id)===Number(currentSongId)),n=i+d;if(n>=0&&n<ids.length){currentSongId=ids[n];editOpen=false;render();requestAnimationFrame(()=>{(viewMode==="instrumental"?$("chartView"):$("vocalView")).scrollLeft=0})}}
-function toggleStage(){document.body.classList.toggle("stage");$("stageNotesPanel").classList.remove("open");requestAnimationFrame(()=>{(viewMode==="instrumental"?$("chartView"):$("vocalView")).scrollLeft=0})}
+function toggleStage(){document.body.classList.toggle("stage");requestAnimationFrame(()=>{(viewMode==="instrumental"?$("chartView"):$("vocalView")).scrollLeft=0})}
 
 function openSongForm(song=null){
  $("songModalTitle").textContent=song?"Editar música":"Nova música";$("archiveSongBtn").classList.toggle("hidden",!song);$("saveSongModalBtn").dataset.id=song?.id||"";
- $("fTitle").value=song?.title||"";$("fArtist").value=song?.artist||"";$("fOriginalKey").value=song?.original_key||"";$("fSetKey").value=song?.set_key||song?.original_key||"";$("fCapo").value=song?.capo??0;$("fBpm").value=song?.bpm??"";$("fMeter").value=song?.meter||"";$("fRef").value=song?.reference_url||"";$("fChart").value=song?.chart||"";$("fLyrics").value=song?.lyrics||"";$("fMap").value=normalizeMap(song?.song_map).sections.map(x=>x.label).join("\n");$("fNotes").value=song?.notes||"";$("pdfReviewHint").classList.add("hidden");openModal("songModal")
+ $("fTitle").value=song?.title||"";$("fArtist").value=song?.artist||"";$("fOriginalKey").value=song?.original_key||"";$("fSetKey").value=song?.set_key||song?.original_key||"";$("fCapo").value=song?.capo??0;$("fBpm").value=song?.bpm??"";$("fMeter").value=song?.meter||"";$("fRef").value=song?.reference_url||"";$("fChart").value=song?.chart||"";$("fLyrics").value=song?.lyrics||"";$("fMap").value=normalizeMap(song?.song_map).sections.join("\n");$("fNotes").value=song?.notes||"";openModal("songModal")
 }
 async function saveSongForm(){
  if(!user){alert("Entre primeiro para salvar no repertório.");return}
  const id=Number($("saveSongModalBtn").dataset.id)||null,title=$("fTitle").value.trim();if(!title){alert("Informe o título.");return}
  const setKey=$("fSetKey").value.trim()||$("fOriginalKey").value.trim(),capoN=Number($("fCapo").value)||0,chart=$("fChart").value;
- const payload={user_id:user.id,title,artist:$("fArtist").value.trim(),original_key:$("fOriginalKey").value.trim(),set_key:setKey,capo:capoN,bpm:$("fBpm").value?Number($("fBpm").value):null,meter:$("fMeter").value.trim()||null,chart,song_map:{sections:$("fMap").value.split("\n").map(x=>x.trim()).filter(Boolean).map(label=>({label,cue:""})),chartShapeKey:desiredShapeKey(setKey,capoN)||setKey,originalCapo:capoN},notes:$("fNotes").value,lyrics:$("fLyrics").value||stripChordLines(chart),vocal_map:id?(songById(id)?.vocal_map||[]):[],reference_url:$("fRef").value.trim()||null,is_active:true,updated_at:new Date().toISOString()};
+ const payload={user_id:user.id,title,artist:$("fArtist").value.trim(),original_key:$("fOriginalKey").value.trim(),set_key:setKey,capo:capoN,bpm:$("fBpm").value?Number($("fBpm").value):null,meter:$("fMeter").value.trim()||null,chart,song_map:{sections:$("fMap").value.split("\n").map(x=>x.trim()).filter(Boolean),chartShapeKey:desiredShapeKey(setKey,capoN)||setKey,originalCapo:capoN},notes:$("fNotes").value,lyrics:$("fLyrics").value||stripChordLines(chart),vocal_map:id?(songById(id)?.vocal_map||[]):[],reference_url:$("fRef").value.trim()||null,is_active:true,updated_at:new Date().toISOString()};
  let r;if(id)r=await db.from("songs").update(payload).eq("id",id).select("*").single();else r=await db.from("songs").insert(payload).select("*").single();if(r.error){alert(r.error.message);return}
  if(id){const i=songs.findIndex(s=>s.id===id);songs[i]=r.data}else songs.push(r.data);currentSongId=r.data.id;closeModal("songModal");render();setSync("ok","Sincronizado")
 }
@@ -843,41 +806,23 @@ async function archiveCurrentSong(){const id=Number($("saveSongModalBtn").datase
 
 async function createSetlist(){if(!user)return;const name=$("slName").value.trim();if(!name){alert("Informe um nome.");return}const r=await db.from("setlists").insert({user_id:user.id,name,event_date:$("slDate").value||null,notes:$("slNotes").value||null,updated_at:new Date().toISOString()}).select("*").single();if(r.error){alert(r.error.message);return}setlists.unshift(r.data);currentSetlistId=r.data.id;setlistItems=[];sideMode="setlist";closeModal("setlistModal");render()}
 function openPicker(){if(!currentSetlistId){alert("Crie ou selecione uma setlist.");return}const existing=new Set(setlistItems.map(i=>Number(i.song_id)));$("libraryPicker").innerHTML=songs.filter(s=>s.is_active!==false&&!existing.has(Number(s.id))).map(s=>`<div class="pick-row"><div><strong>${escapeHtml(s.title)}</strong><small>${escapeHtml(s.artist||"")}</small></div><button class="btn small" data-pick="${s.id}">Adicionar</button></div>`).join("")||'<div class="empty">Todas as músicas já estão nesta setlist.</div>';$("libraryPicker").querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>addSongToSetlist(Number(b.dataset.pick)));openModal("pickerModal")}
-async function addSongToSetlist(songId){const pos=setlistItems.length?Math.max(...setlistItems.map(i=>i.position||0))+1:1;const r=await db.from("setlist_songs").insert({setlist_id:currentSetlistId,song_id:songId,position:pos,set_key:null,capo:null,notes:null,chart_override:null,vocal_map_override:null,song_map_override:null,lyrics_override:null,updated_at:new Date().toISOString()}).select("*").single();if(r.error){alert(r.error.message);return}setlistItems.push(r.data);currentSongId=songId;openPicker();render()}
+async function addSongToSetlist(songId){const pos=setlistItems.length?Math.max(...setlistItems.map(i=>i.position||0))+1:1;const r=await db.from("setlist_songs").insert({setlist_id:currentSetlistId,song_id:songId,position:pos,set_key:null,capo:null,notes:null,updated_at:new Date().toISOString()}).select("*").single();if(r.error){alert(r.error.message);return}setlistItems.push(r.data);currentSongId=songId;openPicker();render()}
 async function removeSetlistItem(id){if(!confirm("Remover esta música desta setlist? Ela continuará no repertório."))return;const r=await db.from("setlist_songs").delete().eq("id",id);if(r.error){alert(r.error.message);return}setlistItems=setlistItems.filter(i=>i.id!==id);currentSongId=setlistItems[0]?.song_id||null;await normalizePositions();render()}
 async function moveSetlistItem(id,d){const arr=setlistItems.slice().sort((a,b)=>(a.position||0)-(b.position||0)),i=arr.findIndex(x=>x.id===id),t=i+d;if(i<0||t<0||t>=arr.length)return;[arr[i],arr[t]]=[arr[t],arr[i]];for(let n=0;n<arr.length;n++)arr[n].position=n+1;setlistItems=arr;await Promise.all(arr.map(x=>db.from("setlist_songs").update({position:x.position,updated_at:new Date().toISOString()}).eq("id",x.id)));render()}
 async function normalizePositions(){setlistItems.sort((a,b)=>(a.position||0)-(b.position||0));for(let i=0;i<setlistItems.length;i++)setlistItems[i].position=i+1;await Promise.all(setlistItems.map(x=>db.from("setlist_songs").update({position:x.position}).eq("id",x.id)))}
 async function deleteSetlist(){if(!currentSetlistId||!confirm("Excluir esta setlist? As músicas continuarão no repertório."))return;await db.from("setlist_songs").delete().eq("setlist_id",currentSetlistId);const r=await db.from("setlists").delete().eq("id",currentSetlistId);if(r.error){alert(r.error.message);return}setlists=setlists.filter(s=>s.id!==currentSetlistId);currentSetlistId=setlists[0]?.id||null;await loadSetlistItems();currentSongId=setlistItems[0]?.song_id||songs[0]?.id||null;render()}
 
-function saveVocalGridDebounced(){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{const s=currentSong();if(!s)return;const data=[...$("vocalGrid").querySelectorAll(".vocal-row")].map(row=>({section:row.dataset.section,assignment:row.querySelector("select").value,note:row.querySelector(".vnote").value})).filter(x=>x.assignment||x.note);if(sideMode==="setlist"){const item=activeSetlistItem();if(!item)return;item.vocal_map_override=data;const r=await db.from("setlist_songs").update({vocal_map_override:data,updated_at:new Date().toISOString()}).eq("id",item.id);if(r.error){setSync("err","Erro",r.error.message);return}}else{s.vocal_map=data;await saveSongNow();return}setSync("ok","Sincronizado");render()},600)}
-
-
-function pdfLinesFromItems(items){const rows=[];for(const it of items){const y=Math.round((it.transform?.[5]||0)/3)*3,x=it.transform?.[4]||0,text=(it.str||"").trim();if(!text)continue;let row=rows.find(r=>Math.abs(r.y-y)<=3);if(!row){row={y,parts:[]};rows.push(row)}row.parts.push({x,text})}rows.sort((a,b)=>b.y-a.y);return rows.map(r=>r.parts.sort((a,b)=>a.x-b.x).map(p=>p.text).join("   ").trim()).filter(Boolean)}
-function parsePdfDraft(text){
- const lines=text.split("\n").map(x=>x.trim()).filter(Boolean),junk=/^(cifra club|cifraclub|www\.|https?:\/\/|página \d+|page \d+)/i,useful=lines.filter(x=>!junk.test(x));
- const title=useful[0]||"",artist=useful[1]&&!/^(tom|key|capo|capotraste|bpm|intro|verso|refr)/i.test(useful[1])?useful[1]:"";
- const km=text.match(/(?:Tom|Tonalidade|Key)\s*[:\-]\s*([A-G](?:#|b)?m?)/i),cm=text.match(/(?:Capo|Capotraste)\s*[:\-]?\s*(\d+)/i),bm=text.match(/(?:BPM|Andamento)\s*[:\-]?\s*(\d{2,3})/i),mm=text.match(/Compasso\s*[:\-]?\s*(\d+\s*\/\s*\d+)/i);
- const sr=/^(?:\[(.+)\]|(Intro(?:dução)?|Verso(?:\s*\d+)?|Refrão(?:\s*\d+)?|Pré[- ]?Refrão|Ponte(?:\s*\d+)?|Final|Solo|Interlúdio|Parte\s*\d+|Instrumental)(?:\s*[×x]\s*\d+)?)$/i,sections=[];
- const chart=lines.map(line=>{const m=line.match(sr);if(m){const sec=(m[1]||m[2]).trim();if(!sections.includes(sec))sections.push(sec);return `[${sec}]`}return line}).join("\n");
- return {title,artist,key:km?.[1]||"",capo:cm?Number(cm[1]):0,bpm:bm?Number(bm[1]):"",meter:mm?mm[1].replace(/\s/g,""):"",chart,lyrics:stripChordLines(chart),sections}
-}
-async function importPdfFile(file){
- if(!file)return;if(!window.pdfjsLib){alert("O leitor de PDF não carregou. Atualize a página e tente novamente.");return}
- setSync("busy","Lendo PDF...","Extraindo a cifra no próprio navegador.");
- try{pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";const buf=await file.arrayBuffer(),pdf=await pdfjsLib.getDocument({data:buf}).promise,pages=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),tc=await page.getTextContent();pages.push(pdfLinesFromItems(tc.items).join("\n"))}const d=parsePdfDraft(pages.join("\n\n"));openSongForm();$("songModalTitle").textContent="Importar música do PDF";$("pdfReviewHint").classList.remove("hidden");$("fTitle").value=d.title;$("fArtist").value=d.artist;$("fOriginalKey").value=d.key;$("fSetKey").value=d.key;$("fCapo").value=d.capo;$("fBpm").value=d.bpm;$("fMeter").value=d.meter;$("fChart").value=d.chart;$("fLyrics").value=d.lyrics;$("fMap").value=d.sections.join("\n");setSync("ok","PDF processado","Revise antes de salvar.")}
- catch(e){console.error(e);setSync("err","Erro no PDF",e.message||"Falha ao ler.");alert("Não consegui interpretar este PDF automaticamente. Você pode cadastrar a música manualmente.")}
- finally{$("pdfInput").value=""}
-}
+function saveVocalGridDebounced(){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{const s=currentSong();if(!s)return;s.vocal_map=[...$("vocalGrid").querySelectorAll(".vocal-row")].map(row=>({section:row.dataset.section,assignment:row.querySelector("select").value,note:row.querySelector(".vnote").value})).filter(x=>x.assignment||x.note);await saveSongNow()},600)}
 
 $("libraryTab").onclick=()=>{sideMode="library";editOpen=false;if(!currentSongId)currentSongId=songs[0]?.id||null;render()};
 $("setlistTab").onclick=async()=>{sideMode="setlist";editOpen=false;if(!currentSetlistId&&setlists.length)currentSetlistId=setlists[0].id;await loadSetlistItems();currentSongId=setlistItems[0]?.song_id||null;render()};
 $("setlistSelect").onchange=async e=>{currentSetlistId=Number(e.target.value)||null;await loadSetlistItems();currentSongId=setlistItems[0]?.song_id||null;render()};
-$("newSongBtn").onclick=()=>openSongForm();$("importPdfBtn").onclick=()=>$("pdfInput").click();$("pdfInput").onchange=e=>importPdfFile(e.target.files?.[0]);$("editSongBtn").onclick=()=>{const s=currentSong();if(s)openSongForm(s)};$("saveSongModalBtn").onclick=saveSongForm;$("archiveSongBtn").onclick=archiveCurrentSong;
+$("newSongBtn").onclick=()=>openSongForm();$("editSongBtn").onclick=()=>{const s=currentSong();if(s)openSongForm(s)};$("saveSongModalBtn").onclick=saveSongForm;$("archiveSongBtn").onclick=archiveCurrentSong;
 $("newSetlistBtn").onclick=()=>openModal("setlistModal");$("saveSetlistBtn").onclick=createSetlist;$("addToSetlistBtn").onclick=openPicker;$("deleteSetlistBtn").onclick=deleteSetlist;
 $("instrumentalBtn").onclick=()=>setView("instrumental");$("vocalBtn").onclick=()=>setView("vocal");$("editContentBtn").onclick=toggleEdit;$("syncVocalSectionsBtn").onclick=renderVocalGrid;
 $("fontDownBtn").onclick=()=>{fontSize=Math.max(14,fontSize-1);render()};$("fontUpBtn").onclick=()=>{fontSize=Math.min(34,fontSize+1);render()};
-$("saveBtn").onclick=saveCurrentFields;$("flatBtn").onclick=()=>transposeCurrent(-1);$("sharpBtn").onclick=()=>transposeCurrent(1);$("originalBtn").onclick=restoreOriginal;$("restoreToneOnly").onclick=restoreToneOnly;$("restoreAll").onclick=restoreAllOverrides;
-$("stageBtn").onclick=toggleStage;$("stageExit").onclick=toggleStage;$("stageNotesToggle").onclick=()=>$("stageNotesPanel").classList.toggle("open");$("colPrev").onclick=()=>stageScroll(-1);$("colNext").onclick=()=>stageScroll(1);$("prevBtn").onclick=()=>stepSong(-1);$("nextBtn").onclick=()=>stepSong(1);
+$("saveBtn").onclick=saveCurrentFields;$("flatBtn").onclick=()=>transposeCurrent(-1);$("sharpBtn").onclick=()=>transposeCurrent(1);$("originalBtn").onclick=restoreOriginal;
+$("stageBtn").onclick=toggleStage;$("stageExit").onclick=toggleStage;$("colPrev").onclick=()=>stageScroll(-1);$("colNext").onclick=()=>stageScroll(1);$("prevBtn").onclick=()=>stepSong(-1);$("nextBtn").onclick=()=>stepSong(1);
 $("refBtn").onclick=()=>{const s=currentSong();if(s?.reference_url)window.open(s.reference_url,"_blank")};
 $("editMapBtn").onclick=()=>{mapEdit=!mapEdit;$("mapEditor").classList.toggle("hidden",!mapEdit);renderMapEditor()};
 $("sideSearch").oninput=renderSidebar;
