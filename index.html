@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b10">
-<title>SET • Stage v12-A.3</title>
+<title>SET • Stage v12-A.4</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -64,7 +64,7 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.04;margin:0 0 6px;letter-spacing
 <body>
 <div class="app">
  <aside class="sidebar">
-  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco • v12-A.3</div></div></div>
+  <div class="brandrow"><div class="logo">♫</div><div><div class="brand">SET • STAGE</div><div class="sub">Repertório • setlists • vocal • palco • v12-A.4</div></div></div>
   <div class="tabs"><button class="tab active" id="libraryTab">Repertório</button><button class="tab" id="setlistTab">Setlists</button></div>
   <div id="libraryControls">
    <div class="side-actions"><button class="btn primary small" id="newSongBtn">+ Música</button></div>
@@ -716,7 +716,7 @@ function renderVocalGrid(){
  const s=currentSong();if(!s)return;const sections=sectionsFromSong(s),existing=vocalMapObj(s);
  $("vocalGrid").innerHTML=sections.map(sec=>{const v=existing.find(x=>(x.section||"").toLowerCase()===sec.toLowerCase())||{};return `<div class="vocal-row" data-section="${escapeHtml(sec)}"><input value="${escapeHtml(sec)}" disabled><select><option value="">Sem indicação</option>${["Uníssono","Líder / solo","Todos","V1 + V2","3 vozes","Homens","Mulheres","Backs respondem","Livre / espontâneo"].map(o=>`<option ${v.assignment===o?"selected":""}>${o}</option>`).join("")}</select><input class="vnote" placeholder="Ex.: abre terça acima" value="${escapeHtml(v.note||"")}"></div>`}).join("")||'<div class="notice">Adicione seções ao mapa da música.</div>';
  $("vocalGrid").querySelectorAll(".vocal-row").forEach(row=>{
- row.querySelector("select").addEventListener("change",()=>{const data=currentVocalGridData();const s=currentSong();if(!s)return;if(sideMode==="setlist"){const item=activeSetlistItem();if(item)item.vocal_map_override=data;persistVocalData(data)}else saveVocalGridDebounced()});
+ row.querySelector("select").addEventListener("change",()=>{const data=currentVocalGridData(),s=currentSong();if(!s)return;if(sideMode==="setlist"){const item=activeSetlistItem();if(item)item.vocal_map_override=data;saveCurrentFields()}else saveVocalGridDebounced()});
  row.querySelector(".vnote").addEventListener("input",saveVocalGridDebounced)
 })
 }
@@ -766,7 +766,13 @@ async function saveCurrentFields(){
  const s=currentSong();if(!s)return;
  const newKey=$("key").value.trim(),newCapo=Math.max(0,Math.min(11,Number($("capo").value)||0));
  if(sideMode==="setlist"){
-  const item=activeSetlistItem();if(item){item.set_key=newKey||null;item.capo=newCapo;item.notes=$("notes").value;const r=await db.from("setlist_songs").update({set_key:item.set_key,capo:item.capo,notes:item.notes,updated_at:new Date().toISOString()}).eq("id",item.id);if(r.error){setSync("err","Erro",r.error.message);return}}
+  const item=activeSetlistItem();if(item){
+   item.set_key=newKey||null;item.capo=newCapo;item.notes=$("notes").value;
+   if(viewMode==="vocal")item.vocal_map_override=currentVocalGridData();
+   const payload={set_key:item.set_key,capo:item.capo,notes:item.notes,updated_at:new Date().toISOString()};
+   if(viewMode==="vocal")payload.vocal_map_override=item.vocal_map_override;
+   const r=await db.from("setlist_songs").update(payload).eq("id",item.id);if(r.error){setSync("err","Erro",r.error.message);return}
+  }
   s.bpm=$("bpm").value?Number($("bpm").value):null;s.meter=$("meter").value.trim()||null;await saveSongNow()
  }else{
   const oldShape=baseShape(s),target=desiredShapeKey(newKey,newCapo)||newKey;
@@ -842,7 +848,8 @@ function saveVocalGridDebounced(){
  if(sideMode==="setlist"){
   const item=activeSetlistItem();if(!item)return;
   item.vocal_map_override=data;
-  persistVocalData(data);
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(saveCurrentFields,250);
   return;
  }
  s.vocal_map=data;
@@ -851,12 +858,12 @@ function saveVocalGridDebounced(){
 }
 async function refreshVocalSections(){
  clearTimeout(saveTimer);
- const data=currentVocalGridData();
- const s=currentSong();if(!s)return;
- if(sideMode==="setlist"){const item=activeSetlistItem();if(item)item.vocal_map_override=data}
- else s.vocal_map=data;
- const ok=await persistVocalData(data);
- if(ok)renderVocalGrid()
+ const data=currentVocalGridData(),s=currentSong();if(!s)return;
+ if(sideMode==="setlist"){
+  const item=activeSetlistItem();if(!item)return;item.vocal_map_override=data;
+  await saveCurrentFields();renderVocalGrid();return;
+ }
+ s.vocal_map=data;const ok=await persistVocalData(data);if(ok)renderVocalGrid()
 }
 
 $("libraryTab").onclick=()=>{sideMode="library";editOpen=false;if(!currentSongId)currentSongId=songs[0]?.id||null;render()};
